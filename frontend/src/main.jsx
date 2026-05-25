@@ -7,20 +7,20 @@ import Home from './pages/Home.jsx'
 import Auth from './pages/Auth.jsx';
 import { UserProvider } from './context/UserContext.jsx';
 import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-
+import CollabModal from './components/CollabModal.jsx';
 const router = (
   createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/home" element={<Home/>}></Route>
-        <Route path="/" element={<Auth/>}></Route>
+        <Route path="/home" element={<Home />}></Route>
+        <Route path="/" element={<Auth />}></Route>
       </>
     )
   )
 )
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <StrictMode> 
     <UserProvider>
       <RouterProvider router={router} />
     </UserProvider>

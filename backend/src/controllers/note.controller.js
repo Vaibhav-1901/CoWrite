@@ -79,6 +79,18 @@ const deleteNote= async(req,res)=>{
     }
 }
 
+const getSessionNotes=async(req,res)=>{
+    try {
+        const {sessionId}=req.params;
+        const notes=await Note.find({sessionId}).sort({updatedAt:-1});
+        if(!notes){
+            return res.status(400).json({message:"No Notes Found for this session"});
+        }
+        return res.status(200).json({notes});   
+    } catch (error) {
+        return res.status(400).json({error:error.message});
+    }
+}
 
-export {createNote, getAllNotes, editNote, deleteNote, getSingleNote}
+export {createNote, getAllNotes, editNote, deleteNote, getSingleNote, getSessionNotes}
 

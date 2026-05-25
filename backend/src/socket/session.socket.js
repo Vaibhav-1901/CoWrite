@@ -1,6 +1,7 @@
 import {Server} from 'socket.io';
 import { nanoid } from 'nanoid';
 import { Session } from '../models/session.model.js';
+import { Note } from '../models/note.model.js';
 const initializeSocket=(server)=>{
     const io=new Server(server,{
         cors:{
@@ -59,19 +60,23 @@ const initializeSocket=(server)=>{
             }
         })
         //NOTE ADDED TO SESSION
-        socket.on("note-change",async({note,sessionId})=>{
+        socket.on("note-updated",async({note,sessionId})=>{
             try {
-                const newnote=await Session.findByIdAndUpdate(
-                    sessionId,
-                    {notes:note},
+                const session=await Session.findById(sessionId);
+                if(!session){
+                    socket.emit("error", { message: "Session not found" });
+                    return;
+                }
+                const newNote=await Note.findByIdAndUpdate(
+                    note._id,
+                    {content:note.content},
                     {new:true}
                 )
                 //emit to everyone else in the session that a note has been added
-                socket.to(sessionId).emit("note-added", {note:newnote});     
+                socket.to(sessionId).emit("note-updated", {note:newnote});     
             } catch (error) {
                 socket.emit("error", { message: error.message });
                 console.log("Error updating note:", error);
-
             }
         })
         //leave session 
@@ -95,7 +100,7 @@ const initializeSocket=(server)=>{
                     {$pull:{members:userId}}
                 )//removing from the memvbers
                 socket.leave(sessionId); // remove the user from the room
-                socket.to(sessionId).emit("userLeft",{userId});    
+                socket.to(sessionId).emit("userLeft",{userId}); // telling other users in the session that a user has left 
             } catch (error) {
                 socket.emit("error", { message: error.message });
                 console.error("Error leaving session:", error);

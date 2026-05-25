@@ -12,6 +12,14 @@ const noteSchema = new mongoose.Schema({
         type:[
             String
         ]  
+    },
+    sessionId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Session"
+    },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User"
     }
 }, { timestamps: true,
     toJSON: { virtuals: true }
