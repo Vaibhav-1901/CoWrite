@@ -2,13 +2,15 @@ import { Note } from "../models/note.model.js";
 import { User } from "../models/user.model.js";
 const createNote= async(req,res)=>{
     try{
-        const{title,content}=req.body;
+        const{title,content,userId,sessionId}=req.body;
         if(!title){
             return res.status(400).json({message:"Title  cannot be empty"}); 
         }
         const note= await Note.create({
             title,
-            content
+            content,
+            userId,
+            sessionId
         })
         return res.status(200).json({note})
 

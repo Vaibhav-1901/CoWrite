@@ -8,6 +8,7 @@ import Auth from './pages/Auth.jsx';
 import { UserProvider } from './context/UserContext.jsx';
 import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import CollabModal from './components/CollabModal.jsx';
+import { CollabProvider } from './context/CollabContext.jsx';
 const router = (
   createBrowserRouter(
     createRoutesFromElements(
@@ -22,7 +23,9 @@ const router = (
 createRoot(document.getElementById('root')).render(
   <StrictMode> 
     <UserProvider>
-      <RouterProvider router={router} />
+      <CollabProvider>
+        <RouterProvider router={router} />
+      </CollabProvider>
     </UserProvider>
   </StrictMode>,
 )

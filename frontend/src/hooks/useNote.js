@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { BASE_URL } from "../../constants";
-function useNote() {
+import socket from "../socket/socket.js";
+function useNote(options = {}) {
     const [notes, setNotes] = useState([]);
+    const { isCollaborative, sessionId } = options;
     const [error, setError] = useState();
     const [loading, setLoading] = useState(true);
     const fetchNotes = async () => {
@@ -21,6 +23,22 @@ function useNote() {
             setLoading(false)
         }
     };
+    const fetchSessionNotes = async () => {
+        try {
+            const res = await fetch(`${BASE_URL}/api/notes/${sessionId}/notes`);
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.message || 'Failed to fetch session notes');
+            }
+            console.log("Session Notes:", data.notes);
+            setNotes(data.notes);
+        } catch (error) {
+            console.error("Error fetching session notes:", error.message);
+        }
+        finally {
+            setLoading(false)
+        }
+    }
     const toggleTag = (selectedtag, selectedId) => {
         setNotes(prev => prev.map(note => note.id === selectedId ? { ...note, tags: note.tags.includes(selectedtag) ? note.tags.filter(t => t !== selectedtag) : [...note.tags, selectedtag] } : note));
     }
@@ -63,49 +81,60 @@ function useNote() {
         }
     }
     useEffect(() => {
-        fetchNotes();
-    }, [])
-    const saveNote = async (newNote) => {
+        if (!isCollaborative) {
+            fetchNotes();
+        }
+        else {
+            fetchSessionNotes();
+        }
+
+    }, [isCollaborative, sessionId])
+    const saveNote = async (newNote, options = {}) => {
         try {
-            // console.log(newNote)
-            const res = await fetch(`${BASE_URL}/api/notes/edit/${newNote.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    title: newNote.title,
-                    content: newNote.content,
-                    tags: newNote.tags,
+            const { isCollaborative, sessionId } = options;
+            if (!isCollaborative) {
+                const res = await fetch(`${BASE_URL}/api/notes/edit/${newNote.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title: newNote.title,
+                        content: newNote.content,
+                        tags: newNote.tags,
+                    })
                 })
-            })
-            const data = await res.json();
-            // console.log(data)
-            if (!res.ok) {
-                throw new Error(data.message || data.error);
+                const data = await res.json();
+                // console.log(data)
+                if (!res.ok) {
+                    throw new Error(data.message || data.error);
+                }
+            }
+            else {
+                socket.emit("note-updated", { note: newNote, sessionId }); //emitting the updated note to the backend so that it can be broadcasted to other users in the session
             }
         } catch (error) {
             console.log("Error:", error.message);
             setError(error.message);
         }
     }
-    const deleteNote=async (id)=>{
+    const deleteNote = async (id) => {
         try {
-            const res=await fetch(`${BASE_URL}/api/notes/delete/${id}`,{
-                method:"DELETE"
+            const res = await fetch(`${BASE_URL}/api/notes/delete/${id}`, {
+                method: "DELETE"
             });
-            const data=await res.json();
-            if(!res.ok){
+            const data = await res.json();
+            if (!res.ok) {
                 console.log(data.message)
                 throw new Error(data.message || data.error);
             }
-            setNotes((prev)=>{
-                return prev.filter(note=> note.id!=id)
+            setNotes((prev) => {
+                return prev.filter(note => note.id != id)
             });
         } catch (error) {
             setError(error.message)
         }
     }
-    return { addNote, toggleTag, changeTitle, editContent,saveNote,deleteNote, notes, error, loading}
+    return { addNote, toggleTag, changeTitle, editContent, saveNote, deleteNote, notes, error, loading }
 }
 export default useNote;

@@ -2,19 +2,21 @@ import socket from "../socket/socket";
 import { useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import React from "react";
+import {useCollab} from "../context/CollabContext.jsx";
+
  import {
     X, Users, Plus, LogIn,
-    Copy, Check, ArrowLeft, Wifi
+    Copy, Chck, ArrowLeft, Wifi
 } from "lucide-react";
 
 
 
 function CollabModal({ onClose }) {
     // const { user } = useUser();
-    const [sessionId, setSessionId] = useState("1234");
+    const { sessionId, setSessionId } = useCollab();
     const [mode, setMode] = useState("join");
     const [loading, setLoading] = useState(false);
-
+    const[inputSessionId,setInputSessionId]=useState("");
 
     const handleCreate = () => {
         socket.connect();
@@ -32,13 +34,14 @@ function CollabModal({ onClose }) {
     }
 
     const handleJoin = () => {
-        if (!sessionId) return;
+        if (!inputSessionId) return;
         setLoading(true);
         socket.connect(); // as had autoConnect false, need to connect before emitting
 
-        socket.emit("joinSession", { sessionId, userId: user._id });
+        socket.emit("joinSession", { sessionId: inputSessionId, userId: user._id });
         socket.once("sessionJoined", ({ sessionId }) => {
             setMode("joined");
+            setSessionId(sessionId);
             setLoading(false);
             onClose(sessionId); //what is onClose? its to close the modal and open collab page
         })
@@ -188,8 +191,8 @@ function CollabModal({ onClose }) {
                             <input
                                 type="text"
                                 placeholder="e.g. aB3kR9mX"
-                                value={sessionId}
-                                onChange={(e) => setSessionId(e.target.value)}
+                                value={inputSessionId}
+                                onChange={(e) => setInputSessionId(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                                 className="w-full bg-white/4 border border-white/8 focus:border-white/20 text-white placeholder-white/20 font-mono tracking-[0.15em] text-base px-4 py-3.5 rounded-xl outline-none transition-all"
                                 autoFocus
@@ -197,7 +200,7 @@ function CollabModal({ onClose }) {
 
                             <button
                                 onClick={handleJoin}
-                                disabled={loading || !sessionId.trim()}
+                                disabled={loading || !inputSessionId.trim()}
                                 className="flex items-center justify-center gap-2 w-full bg-white text-black font-semibold text-sm py-3 rounded-xl hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                             >
                                 <LogIn size={14} />

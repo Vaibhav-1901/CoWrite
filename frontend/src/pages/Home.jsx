@@ -4,13 +4,18 @@ import { useState } from 'react';
 import useNote from '../hooks/useNote.js';
 import { BASE_URL } from '../../constants.js';
 import { useUser } from '../context/UserContext.jsx';
+import { useCollab } from '../context/CollabContext.jsx';
 import { useNavigate } from "react-router-dom";
 function Home() {
 
     const [sidebarVisible, setSidebarVisible] = useState(true);
     const [activeTag, setActiveTag] = useState("all");
+    const { sessionId } = useCollab();
     const [selectedId, setSelectedId] = useState(null);
-    const { notes, error, addNote, deleteNote, editContent, toggleTag, changeTitle, saveNote, loading } = useNote();
+    const { notes, error, addNote, deleteNote, editContent, toggleTag, changeTitle, saveNote, loading } = useNote({
+        isCollaborative: !!sessionId,
+        sessionId
+    });
     const [showTagPicker, setShowTagPicker] = useState(false);
     const [search, setSearch] = useState("");
     const selectedNote = notes?.find(note => note.id === selectedId);
@@ -19,6 +24,7 @@ function Home() {
         const matchSearch = !search || note.title?.toLowerCase().includes(search.toLowerCase()) || note.content?.toLowerCase().includes(search.toLowerCase())
         return matchTag && matchSearch;
     })
+
     // console.log(filtered)
     const ALL_TAGS = ["all", "work", "personal", "ideas", "archive"];
 
@@ -79,7 +85,6 @@ function Home() {
 
     useEffect(() => {
         if (!selectedNote) return;
-
         const timeout = setTimeout(() => {
             saveNote(selectedNote);
         }, 800);

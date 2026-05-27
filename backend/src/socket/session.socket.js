@@ -68,12 +68,16 @@ const initializeSocket=(server)=>{
                     return;
                 }
                 const newNote=await Note.findByIdAndUpdate(
-                    note._id,
-                    {content:note.content},
-                    {new:true}
+                    note.id,
+                    {
+                        title:note.title,
+                        content:note.content,
+                        tags:note.tags
+                    },
+                    {returnDocument:"after"}
                 )
                 //emit to everyone else in the session that a note has been added
-                socket.to(sessionId).emit("note-updated", {note:newnote});     
+                socket.to(sessionId).emit("user-updated-note", {note:newNote, updatedBy: socket.data.userId});     
             } catch (error) {
                 socket.emit("error", { message: error.message });
                 console.log("Error updating note:", error);
