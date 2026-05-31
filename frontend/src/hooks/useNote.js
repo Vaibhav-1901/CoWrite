@@ -35,7 +35,7 @@ function useNote(options = {}) {
             if (!res.ok) {
                 throw new Error(data.message || 'Failed to fetch session notes');
             }
-             console.log("Session Notes:", data.notes);
+            console.log("Session Notes:", data.notes);
             setNotes(data.notes);
         } catch (error) {
             console.error("Error fetching session notes:", error.message);
@@ -62,17 +62,22 @@ function useNote(options = {}) {
         }
         // setNotes((prev) => [newNote, ...prev]);
         try {
+            const payload = {
+                title: newNote.title,
+                content: newNote.content,
+                tags: newNote.tags,
+                updatedAt: newNote.updatedAt
+            }
+            if(isCollaborative) {
+                payload.sessionId = sessionId;
+            }
             const res = await fetch(`${BASE_URL}/api/notes/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    title: newNote.title,
-                    content: newNote.content,
-                    tags: newNote.tags,
-                    updatedAt: newNote.updatedAt
-                })
+                body: JSON.stringify(payload),
+                credentials: "include"
             });
             const data = await res.json();
             if (!res.ok) {
@@ -101,7 +106,7 @@ function useNote(options = {}) {
 
         }
 
-    }, [isCollaborative, sessionId,userLoading,user])
+    }, [isCollaborative, sessionId, userLoading, user])
     const saveNote = async (newNote, options = {}) => {
         try {
             const { isCollaborative, sessionId } = options;

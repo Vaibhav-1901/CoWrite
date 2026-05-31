@@ -3,15 +3,26 @@ import { User } from "../models/user.model.js";
 import { Session } from "../models/session.model.js";
 const createNote= async(req,res)=>{
     try{
-        const{title,content,userId,sessionId}=req.body;
+        const{title,content,sessionId}=req.body;
         if(!title){
             return res.status(400).json({message:"Title  cannot be empty"}); 
         }
+        let session;
+        if(sessionId){
+            session = await Session.findOne({sessionId});
+            console.log(session)
+            if(!session){
+                console.log("No session found with ID:", sessionId);
+                return res.status(400).json({message:"No Session Found for this ID"});
+                console.log("No session found with ID:", sessionId);
+            }
+        }
+        
         const note= await Note.create({
             title,
             content,
-            userId,
-            sessionId
+            userId:req.user._id,
+            sessionId:session?._id
         })
         return res.status(200).json({note})
 
