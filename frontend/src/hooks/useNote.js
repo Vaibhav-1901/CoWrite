@@ -120,7 +120,8 @@ function useNote(options = {}) {
                         title: newNote.title,
                         content: newNote.content,
                         tags: newNote.tags,
-                    })
+                    }),
+                    credentials: "include"
                 })
                 const data = await res.json();
                 // console.log(data)
@@ -139,7 +140,8 @@ function useNote(options = {}) {
     const deleteNote = async (id) => {
         try {
             const res = await fetch(`${BASE_URL}/api/notes/delete/${id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include"
             });
             const data = await res.json();
             if (!res.ok) {
@@ -153,6 +155,6 @@ function useNote(options = {}) {
             setError(error.message)
         }
     }
-    return { addNote, toggleTag, changeTitle, editContent, saveNote, deleteNote, notes, error, loading }
+    return { addNote, toggleTag, changeTitle, editContent, saveNote, deleteNote, notes, error, loading,setNotes };
 }
 export default useNote;

@@ -7,17 +7,21 @@ import { useUser } from '../context/UserContext.jsx';
 import { useCollab } from '../context/CollabContext.jsx';
 import { useNavigate } from "react-router-dom";
 import CollabModal from '../components/CollabModal.jsx';
+import useCollaboration from '../hooks/useCollaboration.jsx';
 function Home() {
 
     const [sidebarVisible, setSidebarVisible] = useState(true);
+    const { user, userloading } = useUser();
     const [activeTag, setActiveTag] = useState("all");
     const { sessionId } = useCollab();
+    
     // console.log("Session ID in Home:", sessionId);
     const [selectedId, setSelectedId] = useState(null);
-    const { notes, error, addNote, deleteNote, editContent, toggleTag, changeTitle, saveNote, loading } = useNote({
+    const { notes, error, addNote, deleteNote, editContent, toggleTag, changeTitle, saveNote, loading ,setNotes} = useNote({
         isCollaborative: !!sessionId,
         sessionId
     });
+    const{members}=useCollaboration(sessionId,user?._id,setNotes);
     const [showTagPicker, setShowTagPicker] = useState(false);
     const [search, setSearch] = useState("");
     const selectedNote = notes?.find(note => note.id === selectedId);
@@ -39,7 +43,7 @@ function Home() {
         archive: { bg: "#1a1a1a", text: "#FFFFFF", dot: "#555" },
     };
     const navigate = useNavigate();
-    const { user, userloading } = useUser();
+    
     console.log(notes);
 
     if (error) {
@@ -90,7 +94,15 @@ function Home() {
     useEffect(() => {
         if (!selectedNote) return;
         const timeout = setTimeout(() => {
-            saveNote(selectedNote);
+            if(sessionId){
+                saveNote(selectedNote, {
+                    isCollaborative: true,
+                    sessionId,
+                });
+            }
+            else{
+                saveNote(selectedNote);
+            }
         }, 800);
 
         return () => clearTimeout(timeout);
