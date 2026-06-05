@@ -10,7 +10,7 @@ import CollabModal from '../components/CollabModal.jsx';
 import useCollaboration from '../hooks/useCollaboration.jsx';
 import { useRef } from 'react';
 import SessionMembers from '../components/SessionMembers.jsx';
-
+import CollabControls from '../components/CollabControls.jsx';
 function Home() {
 
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -398,17 +398,18 @@ function Home() {
                 {showTagPicker && (
                     <div className="fixed inset-0 z-40" onClick={() => setShowTagPicker(false)} />
                 )}
-                <button
+                {/* <button
                     className="fixed bottom-5 right-5 bg-[#1e1e1e] border border-[#2a2a2a] text-[#aaa] rounded-md w-20 h-10 flex items-center justify-center hover:bg-[#2a2a2a] transition-colors cursor-pointer z-50 "
                     onClick={() => setShowCollabModal(true)}>
                     Collab
-                </button>
+                </button> */}
                 {showCollabModal && (
                     <CollabModal onClose={() => setShowCollabModal(false)} />
                 )}
                 <div className="fixed bottom-16 right-5 z-50">
                     <SessionMembers />
                 </div>
+                <CollabControls openModal={() => setShowCollabModal(true)} />
             </div>
         </>
     )

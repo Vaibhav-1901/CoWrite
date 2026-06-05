@@ -125,15 +125,13 @@ const initializeSocket = (server) => {
                 );
                 socket.leave(sessionId);
                 socket.to(sessionId).emit("userLeft", { userId });
+                
             } catch (error) {
                 socket.emit("error", { message: error.message });
                 console.error("Error leaving session:", error);
             }
         }
     });
-
-
-
 }
 
 
