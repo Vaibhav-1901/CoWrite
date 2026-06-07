@@ -46,12 +46,19 @@ const useCollaboration = (sessionId, userId, setNotes, isRemoteUpdate) => {
             isRemoteUpdate.current = true;
             setNotes((prevNotes) => prevNotes.map((n) => n.id === note.id ? note : n));
         })
-
+        socket.on("user-added-note", ({note})=>{
+            console.log("Remote note added: ", note);
+            setNotes((prev) => [note, ...prev]);
+        })
+        socket.on("user-deleted-note",({id})=>{
+            setNotes((prev)=> prev.filter((note)=> note.id !=id));
+        })
         return () => {
             socket.off("userJoined");
             socket.off("userLeft");
             socket.off("user-updated-note");
-
+            socket.off("user-added-note");
+            socket.off("user-deleted-note");
         };
 
     }, [sessionId, userId]);

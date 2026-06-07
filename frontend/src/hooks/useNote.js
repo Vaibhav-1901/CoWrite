@@ -84,6 +84,7 @@ function useNote(options = {}) {
                 throw new Error(data.message || data.error);
             }
             setNotes((prev) => [data.note, ...prev]);
+            socket.emit("note-added",{note:data.note, sessionId}); //emitting the new note to the backend so that it can be broadcasted to other users in the session
             return data.note
         } catch (error) {
             console.log("Error:", error.message);
@@ -151,6 +152,10 @@ function useNote(options = {}) {
             setNotes((prev) => {
                 return prev.filter(note => note.id != id)
             });
+            if(sessionId){
+                socket.emit("note-deleted",{id,sessionId})
+            }
+
         } catch (error) {
             setError(error.message)
         }

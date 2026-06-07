@@ -407,7 +407,7 @@ function Home() {
                 {showCollabModal && (
                     <CollabModal onClose={() => setShowCollabModal(false)} />
                 )}
-                {sessionId && (
+                {sessionId && showSessionMembers &&  (
                     <div className="fixed bottom-19 right-5 z-50">
                         <SessionMembers />
                     </div>

@@ -105,6 +105,12 @@ const initializeSocket = (server) => {
                 console.log("Error updating note:", error);
             }
         })
+        socket.on("note-added", ({note,sessionId})=>{
+            socket.to(sessionId).emit("user-added-note", {note}); 
+        })
+        socket.on("note-deleted", ({id, sessionId})=>{
+            socket.to(sessionId).emit("user-deleted-note", {id});
+        })
         //leave session 
         socket.on("leaveSession", async ({ sessionId, userId }) => {
             await handleLeave(socket, sessionId, userId);

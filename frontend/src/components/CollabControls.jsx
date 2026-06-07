@@ -5,6 +5,7 @@ import { useUser } from '../context/UserContext.jsx';
 import socket from '../socket/socket.js';
 
 
+
 function CollabControls({ openModal, isOpen, toggleSessionMembers }) {
     const { sessionId, allMembers, onlineMembers, setSessionId, setAllMembers, setOnlineMembers } = useCollab();
     const { user } = useUser();
@@ -34,34 +35,32 @@ function CollabControls({ openModal, isOpen, toggleSessionMembers }) {
                 </button>
             ) : (
                 // In session — session ID + leave, same width as members panel
-                <div className="flex items-center bg-[#141414] border border-white/8 rounded-b-xl overflow-hidden">
-
+                <div className={`flex items-center bg-[#141414] border border-white/8 ${isOpen ? "rounded-b-xl" : "rounded-xl" }`}>
                     {/* Session ID */}
                     <button
                         onClick={toggleSessionMembers}
-                        className="flex items-center gap-2 flex-1 px-3 h-10 border-r border-white/6
+                        className="flex items-center gap-2  px-[18px] h-10 border-r border-white/6
                                        hover:bg-white/4 transition-colors duration-200 text-left"
                     >
                         <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
                             <span className="animate-ping absolute inset-0 rounded-full bg-emerald-400 opacity-50" />
                             <span className="relative rounded-full h-1.5 w-1.5 bg-emerald-400" />
                         </span>
-                        <span className="text-[11px] text-white/30 font-mono tracking-wider truncate flex-1">
-                            {sessionId}
+                        <span className="text-[11px] text-white/30 font-mono tracking-wider truncate flex-1 ml-1">
+                           {onlineMembers.length} online
                         </span>
                         {/* Arrow */}
                         {isOpen
-                            ? <ChevronDown size={11} className="text-white/20 flex-shrink-0" />
-                            : <ChevronUp size={11} className="text-white/20 flex-shrink-0" />
+                            ? <ChevronDown size={11} className="text-white/20 flex-shrink-0 animate-pulse" />
+                            : <ChevronUp size={11} className="text-white/20 flex-shrink-0 animate-pulse" />
                         }
                     </button>
-
                     {/* Leave */}
                     <button
                         onClick={handleLeaveSession}
-                        className="flex items-center gap-1.5 h-10 px-3 flex-shrink-0
+                        className="flex items-center gap-1.5 h-10 px-[21px] 
                          text-white/25 hover:text-red-400
-                         hover:bg-red-500/8 transition-all duration-200"
+                         hover:bg-red-500/8 transition-all duration-200 rounded-lg"
                     >
                         <LogOut size={12} strokeWidth={1.8} />
                         <span className="text-xs font-medium">Leave</span>

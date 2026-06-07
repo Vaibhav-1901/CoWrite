@@ -10,7 +10,7 @@ function SessionMembers() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
         <span className="text-[10px] uppercase tracking-widest text-white/25 font-medium">
-          Members
+          {allMembers.length} Members
         </span>
         <span className='text-[10px] uppercase tracking-widest text-white/25 font-medium'>
           {onlineMembers.length} online
