@@ -2,6 +2,7 @@ import React from 'react'
 import { Users, LogIn, LogOut, Wifi , ChevronUp, ChevronDown} from "lucide-react";
 import { useCollab } from '../context/CollabContext.jsx';
 import { useUser } from '../context/UserContext.jsx';
+import useToast from '../hooks/useToast.js';
 import socket from '../socket/socket.js';
 
 
@@ -9,12 +10,13 @@ import socket from '../socket/socket.js';
 function CollabControls({ openModal, isOpen, toggleSessionMembers }) {
     const { sessionId, allMembers, onlineMembers, setSessionId, setAllMembers, setOnlineMembers } = useCollab();
     const { user } = useUser();
-
+    const {show}=useToast();
     const handleLeaveSession = () => {
         socket.emit("leaveSession", { sessionId, userId: user._id });
         socket.once("sessionLeft", () => {
             setSessionId(null);
             setAllMembers([]);
+            show(`Session left successfully`, "sessionLeave");
             setOnlineMembers([]);
             socket.disconnect();
         })

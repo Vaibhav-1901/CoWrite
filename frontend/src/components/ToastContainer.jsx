@@ -1,15 +1,17 @@
 import React from 'react'
 
 
-import { Users, UserMinus, FilePlus, Trash2, PlusCircle } from "lucide-react";
+import { Users, UserMinus, FilePlus, Trash2, PlusCircle, LogIn, LogOut } from "lucide-react";
 
 const icons = {
-    join:   <Users size={12} className="text-emerald-400" strokeWidth={1.8} />,
-    leave:  <UserMinus size={12} className="text-white/30" strokeWidth={1.8} />,
-    note:   <FilePlus size={12} className="text-sky-400" strokeWidth={1.8} />,
-    add:    <PlusCircle size={12} className="text-violet-400" strokeWidth={1.8} />,
+    join: <Users size={12} className="text-emerald-400" strokeWidth={1.8} />,
+    leave: <UserMinus size={12} className="text-white/30" strokeWidth={1.8} />,
+    note: <FilePlus size={12} className="text-sky-400" strokeWidth={1.8} />,
+    add: <PlusCircle size={12} className="text-violet-400" strokeWidth={1.8} />,
     delete: <Trash2 size={12} className="text-red-400/70" strokeWidth={1.8} />,
-    info:   null,
+    sessionJoin: <LogIn size={12} className="text-emerald-400" strokeWidth={1.8} />,
+    sessionLeave: <LogOut size={12} className="text-white/30" strokeWidth={1.8} />,
+    info: null,
 };
 function ToastContainer({ toasts }) {
     return (

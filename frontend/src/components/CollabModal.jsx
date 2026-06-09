@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import React from "react";
 import { useCollab } from "../context/CollabContext.jsx";
+import useToast from "../hooks/useToast.js";
 
 import {
     X, Users, Plus, LogIn,
@@ -18,11 +19,18 @@ function CollabModal({ onClose }) {
     const [loading, setLoading] = useState(false);
     const [inputSessionId, setInputSessionId] = useState("");
     const [copied, setCopied] = useState(false);
+    const [error, setError] = useState("");
+    const {show}=useToast();
 
+    const handleChange=(e)=>{
+        setInputSessionId(e.target.value);
+        setError("");
+    }
     const handleCreate = () => {
+        setError("");
         socket.connect();
         setLoading(true);
-        socket.emit("createSession", { userId: user._id ,username: user.username});
+        socket.emit("createSession", { userId: user._id, username: user.username });
         socket.once("sessionCreated", ({ sessionId }) => {//uisng once because we only want to listen for this event once, not every time a session is created
             setSessionId(sessionId);
             setMode("created");
@@ -30,25 +38,29 @@ function CollabModal({ onClose }) {
         })
         socket.on("error", ({ message }) => {
             setLoading(false);
+            setError(message);
             console.log("Error creating session:", message);
         });
     }
 
     const handleJoin = () => {
+        setError("");
         if (!inputSessionId) return;
         setLoading(true);
         socket.connect(); // as had autoConnect false, need to connect before emitting
-        
+
         socket.emit("joinSession", { sessionId: inputSessionId, userId: user._id, username: user.username });
 
         socket.once("sessionJoined", ({ sessionId }) => {
             setMode("joined");
             setSessionId(sessionId);
+            show(`Session joined successfully`, "sessionJoin");
             setLoading(false);
             onClose(); //what is onClose? its to close the modal and open collab page
         })
         socket.on("error", ({ message }) => {
             setLoading(false);
+            setError(message);
             console.log("Error joining session:", message);
         });
 
@@ -198,7 +210,7 @@ function CollabModal({ onClose }) {
                                 type="text"
                                 placeholder="e.g. aB3kR9mX"
                                 value={inputSessionId}
-                                onChange={(e) => setInputSessionId(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                                 className="w-full bg-white/4 border border-white/8 focus:border-white/20 text-white placeholder-white/20 font-mono tracking-[0.15em] text-base px-4 py-3.5 rounded-xl outline-none transition-all"
                                 autoFocus
@@ -220,6 +232,11 @@ function CollabModal({ onClose }) {
                                 <ArrowLeft size={12} />
                                 Back
                             </button>
+                            {error && (
+                                <div className=" px-3.5 py-2.5 bg-[#1a1010] border border-[#3a1f1f] rounded-md font-mono text-xs text-[#e07070]">
+                                    {error}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { BASE_URL } from "../../constants.js";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext.jsx";
+import useToast from "../hooks/useToast.js";
 
 function StarField() {
     const canvasRef = useRef(null);
@@ -26,7 +27,7 @@ function StarField() {
 
         let frame = 0;
         let animId;
-
+       
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             frame++;
@@ -77,6 +78,7 @@ function Auth() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useUser();
+     const {show}=useToast();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -101,6 +103,7 @@ function Auth() {
           const data = await res.json();
           if (!res.ok) throw new Error(data.message || "Something went wrong.");
           setUser(data.user);
+          show("Successfully signed in", "sessionJoin");
           navigate("/home");
 
         } catch (err) {

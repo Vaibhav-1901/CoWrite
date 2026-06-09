@@ -9,12 +9,14 @@ import { UserProvider } from './context/UserContext.jsx';
 import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import CollabModal from './components/CollabModal.jsx';
 import { CollabProvider } from './context/CollabContext.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 const router = (
   createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/" element={<Auth />}></Route>
+        <Route path="/landing" element={<LandingPage />}></Route>
       </>
     )
   )

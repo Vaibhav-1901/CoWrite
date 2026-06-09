@@ -51,7 +51,7 @@ function Home() {
         books: { bg: "#3b2a1a", text: "#fb923c", dot: "#f97316" },
         archive: { bg: "#1a1a1a", text: "#FFFFFF", dot: "#555" },
     };
-    const {  show } = useToast();
+    const { show } = useToast();
     const navigate = useNavigate();
     console.log("TOASTSSS:", toasts);
 
@@ -133,11 +133,16 @@ function Home() {
             if (!res.ok) {
                 throw new Error(data.message || "Logout failed");
             }
-            navigate("/")
+            show(`Logged out successfully`, "sessionLeave");
+            setTimeout(() => {
+                navigate("/");
+            }, 500);
         } catch (error) {
             console.error("Logout error:", error);
         }
     }
+  
+
     return (
         <>
             <div className="flex h-screen bg-[#111111] text-[#e0e0e0] overflow-hidden font-mono fade-in w-full ">
@@ -410,7 +415,7 @@ function Home() {
                 {showCollabModal && (
                     <CollabModal onClose={() => setShowCollabModal(false)} />
                 )}
-                {sessionId && showSessionMembers &&  (
+                {sessionId && showSessionMembers && (
                     <div className="fixed bottom-19 right-5 z-50">
                         <SessionMembers />
                     </div>
