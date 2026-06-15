@@ -421,7 +421,7 @@ function Home() {
                     </div>
                 )}
                 <CollabControls openModal={() => setShowCollabModal(true)} isOpen={showSessionMembers} toggleSessionMembers={() => setShowSessionMembers((prev) => !prev)} />
-                <ToastContainer toasts={toasts} />
+                <ToastContainer  toasts={toasts} />
             </div>
         </>
     )
