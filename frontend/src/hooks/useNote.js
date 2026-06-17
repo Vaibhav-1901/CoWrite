@@ -14,13 +14,37 @@ function useNote(options = {}) {
             const res = await fetch(`${BASE_URL}/api/notes/user/${user._id}`)
             const data = await res.json();
             if (!res.ok) {
-                throw new Error(data.message || 'Failed to get notes')
+                if (data.message === "Invalid Access Token") {
+                    const renew = await fetch(
+                        `${BASE_URL}/api/users/refresh`,
+                        {
+                            method: "POST",
+                            credentials: "include",
+                        }
+                    );
+                    if (!renew.ok) {
+                        setError("Session expired. Please log in again.");
+                        navigate("/login");
+                        return;
+                    }
+                    const retryRes = await fetch(
+                        `${BASE_URL}/api/notes/user/${user._id}`,
+                        {
+                            credentials: "include"
+                        }
+                    );
+                    const retryData = await retryRes.json();
+                    setNotes(retryData.notes);
+                    return;
+
+                }
+                throw new Error(data.message);
             }
             // console.log(data.notes)
             setNotes(data.notes);
 
         } catch (error) {
-            setError(error.message)
+            setError(error.message);
         }
         finally {
             setLoading(false)
@@ -33,6 +57,31 @@ function useNote(options = {}) {
             const res = await fetch(`${BASE_URL}/api/notes/session/${sessionId}`);
             const data = await res.json();
             if (!res.ok) {
+                if (data.message === "Invalid Access Token") {
+                    const renew = await fetch(
+                        `${BASE_URL}/api/users/refresh`,
+                        {
+                            method: "POST",
+                            credentials: "include",
+                        }
+                    );
+                    if (!renew.ok) {
+                        setError("Session expired. Please log in again.");
+                        navigate("/login");
+                        return;
+                    }
+                    const retryRes = await fetch(`${BASE_URL}/api/notes/session/${sessionId}`,
+                        {
+                            credentials: "include"
+                        }
+                    );
+                    const retryData = await retryRes.json();
+                    if (!retryRes.ok) {
+                        throw new Error(retryData.message || 'Failed to fetch session notes after token refresh');
+                    }
+                    setNotes(retryData.notes);
+                    return;
+                }
                 throw new Error(data.message || 'Failed to fetch session notes');
             }
             console.log("Session Notes:", data.notes);
@@ -68,7 +117,7 @@ function useNote(options = {}) {
                 tags: newNote.tags,
                 updatedAt: newNote.updatedAt
             }
-            if(isCollaborative) {
+            if (isCollaborative) {
                 payload.sessionId = sessionId;
             }
             const res = await fetch(`${BASE_URL}/api/notes/create`, {
@@ -81,10 +130,36 @@ function useNote(options = {}) {
             });
             const data = await res.json();
             if (!res.ok) {
+                if (data.message === "Invalid Access Token") {
+                    const renew = await fetch(
+                        `${BASE_URL}/api/users/refresh`,
+                        {
+                            method: "POST",
+                            credentials: "include",
+                        }
+                    );
+                    if (!renew.ok) {
+                        setError("Session expired. Please log in again.");
+                        navigate("/login");
+                        return;
+                    }
+                    const retryRes = await fetch(`${BASE_URL}/api/notes/create`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload),
+                        credentials: "include"
+                    });
+                    const retryData = await retryRes.json();
+                    setNotes((prev) => [retryData.note, ...prev]); 
+                    return;
+                }
+
                 throw new Error(data.message || data.error);
             }
             setNotes((prev) => [data.note, ...prev]);
-            socket.emit("note-added",{note:data.note, sessionId}); //emitting the new note to the backend so that it can be broadcasted to other users in the session
+            socket.emit("note-added", { note: data.note, sessionId }); //emitting the new note to the backend so that it can be broadcasted to other users in the session
             return data.note
         } catch (error) {
             console.log("Error:", error.message);
@@ -152,14 +227,14 @@ function useNote(options = {}) {
             setNotes((prev) => {
                 return prev.filter(note => note.id != id)
             });
-            if(sessionId){
-                socket.emit("note-deleted",{id,sessionId})
+            if (sessionId) {
+                socket.emit("note-deleted", { id, sessionId })
             }
 
         } catch (error) {
             setError(error.message)
         }
     }
-    return { addNote, toggleTag, changeTitle, editContent, saveNote, deleteNote, notes, error, loading,setNotes };
+    return { addNote, toggleTag, changeTitle, editContent, saveNote, deleteNote, notes, error, loading, setNotes };
 }
 export default useNote;

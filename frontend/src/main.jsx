@@ -15,8 +15,7 @@ const router = (
     createRoutesFromElements(
       <>
         <Route path="/home" element={<Home />}></Route>
-        <Route path="/" element={<Auth />}></Route>
-        <Route path="/landing" element={<LandingPage />}></Route>
+        <Route path="/" element={<LandingPage />}></Route>
       </>
     )
   )

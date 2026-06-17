@@ -131,6 +131,7 @@ function Home() {
                 navigate("/");
             }, 500);
         } catch (error) {
+            navigate("/login");
             console.error("Logout error:", error);
         }
     }

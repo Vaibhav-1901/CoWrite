@@ -24,8 +24,7 @@ function LandingPage() {
                 </div>
             </nav>
 
-            {/* ── Hero ── */}
-            <section className="relative flex flex-col items-center justify-center min-h-screen px-6 pt-14 overflow-hidden">
+            <section className=" relative flex flex-col items-center justify-center min-h-screen px-6 pt-14 overflow-hidden">
 
                 {/* Background glow */}
                 <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] opacity-[0.07]"
@@ -40,7 +39,6 @@ function LandingPage() {
                     }}
                 />
 
-                {/* Floating indicators — subtle, corners only */}
                 <div className="absolute top-24 left-10 flex items-center gap-2 px-3 py-2 bg-white/4 border border-white/6 rounded-xl opacity-60 hidden lg:flex">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
                     <span className="text-[11px] text-white/35">sarah joined the session</span>
@@ -78,23 +76,16 @@ function LandingPage() {
                         >
                             start writing free
                         </button>
-                        <a href="#features"
+                        <a href="#how-it-works"
                             className="text-white/35 hover:text-white/60 text-sm transition-colors px-4 py-2.5">
                             see how it works ↓
                         </a>
                     </div>
                 </div>
 
-                {/* App screenshot */}
                 <div className="relative z-10 mt-16 w-full max-w-5xl">
                     <div className="relative rounded-xl overflow-hidden border border-white/8 shadow-[0_0_80px_rgba(0,0,0,0.8)]">
-                        {/* Window chrome */}
-                        <div className="flex items-center gap-1.5 px-4 py-3 bg-[#111113] border-b border-white/5">
-                            <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                            <span className="ml-3 text-[11px] text-white/20 font-mono">notes — team standup</span>
-                        </div>
+        
                         <img
                             src={AppPreview}
                             alt="notes app"
@@ -102,6 +93,61 @@ function LandingPage() {
                         />
                         {/* Fade bottom of screenshot */}
                         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#080809] to-transparent" />
+                    </div>
+                </div>
+            </section>
+            <section id="how-it-works" className="py-10 px-20">
+                <div className="max-w-7xl mx-auto w-full">
+                    <div className="ml-[22px] text-xl uppercase tracking-[0.25em] text-white/20 mb-10">
+                        GET STARTED
+                    </div>
+
+                    <div className="border border-white/6 rounded-2xl bg-[#0c0c0d] overflow-hidden">
+                        {/* Steps */}
+                        <div className="divide-y divide-white/5">
+                            {[
+                                {
+                                    step: "01",
+                                    cmd: "create your account",
+                                    title: "create an account",
+                                    desc: "sign up free — you'll need it to create or join any session.",
+                                    output: "> you're in. now let's write."
+                                },
+                                {
+                                    step: "02",
+                                    cmd: "open a new session",
+                                    title: "start or join a session",
+                                    desc: "open a new session, or enter a session id someone shared with you.",
+                                    output: "> session id: aB3kR9mX · live."
+                                },
+                                {
+                                    step: "03",
+                                    cmd: "share the session id",
+                                    title: "write together, live",
+                                    desc: "see who's online and edit in sync — no refresh, no merge conflicts.",
+                                    output: "> 3 joined. edits syncing."
+                                }
+                            ].map((item) => (
+                                <div key={item.step} className="grid grid-cols-[80px_1fr_1fr] gap-8 px-8 py-7 group hover:bg-white/[0.02] transition-colors duration-200">
+                                    {/* Step number */}
+                                    <span className="text-[42px] font-bold text-white/5 leading-none select-none group-hover:text-white/8 transition-colors">
+                                        {item.step}
+                                    </span>
+
+                                    {/* Command block */}
+                                    <div className="flex flex-col justify-center gap-2">
+                                        <span className="text-emerald-400/60 text-sm">{item.cmd}</span>
+                                        <span className="text-white/15 text-xs">{item.output}</span>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div className="flex flex-col justify-center gap-1.5">
+                                        <h3 className="text-sm font-semibold tracking-tight text-white">{item.title}</h3>
+                                        <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -159,10 +205,9 @@ function LandingPage() {
                             }
                         ].map((f) => (
                             <div key={f.title} className="bg-[#0c0c0d] px-8 py-6 border rounded-2xl border-blue-950 flex flex-col transition-all duration-300
-
-hover:-translate-y-1
-hover:border-blue-800/40
-hover:shadow-[0_0_35px_rgba(29,78,216,0.12)] ">
+                            hover:-translate-y-1
+                            hover:border-blue-800/40
+                            hover:shadow-[0_0_35px_rgba(29,78,216,0.12)] ">
                                 <div>
                                     <div className="mb-10 flex ">
                                         {f.indicator}

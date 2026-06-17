@@ -159,7 +159,7 @@ const getCurrentUser = async function (req, res) {
 const RefreshAccessToken = async (req, res) => {
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",   // false in dev, true in prod
+        secure: process.env.NODE_ENV === "production", 
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         path: "/",
     }
@@ -183,9 +183,7 @@ const RefreshAccessToken = async (req, res) => {
             return res.status(400).json({ message: "Invalid Refresh Token" })
 
         }
-
         //All verifications Done Generating Access Token
-
         const { AccessToken, RefreshToken } = await generateAccessAndRefreshToken(user._id);//Destructing cant be diff from what you are returning
 
         return res
