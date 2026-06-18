@@ -16,6 +16,7 @@ const router = (
       <>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/" element={<LandingPage />}></Route>
+        <Route path="/login" element={<Auth onSuccess={() => {}} />}></Route>
       </>
     )
   )

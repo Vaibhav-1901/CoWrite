@@ -18,6 +18,10 @@ function Home() {
 
     const [sidebarVisible, setSidebarVisible] = useState(true);
     const { user, userloading } = useUser();
+    const navigate = useNavigate();
+    if(!user){
+        navigate("/login")
+    }
     const [activeTag, setActiveTag] = useState("all");
     const { sessionId, allMembers, onlineMembers, toasts } = useCollab()
     // console.log("Session ID in Home:", sessionId);
@@ -52,7 +56,6 @@ function Home() {
         archive: { bg: "#1a1a1a", text: "#FFFFFF", dot: "#555" },
     };
     const { show } = useToast();
-    const navigate = useNavigate();
     console.log("TOASTSSS:", toasts);
 
     // console.log(selectedNote)

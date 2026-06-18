@@ -35,6 +35,7 @@ function CollabModal({ onClose }) {
             setSessionId(sessionId);
             setMode("created");
             setLoading(false);
+            socket.disconnect();
         })
         socket.on("error", ({ message }) => {
             setLoading(false);
