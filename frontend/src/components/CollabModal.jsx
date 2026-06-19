@@ -32,7 +32,7 @@ function CollabModal({ onClose }) {
         setLoading(true);
         socket.emit("createSession", { userId: user._id, username: user.username });
         socket.once("sessionCreated", ({ sessionId }) => {//uisng once because we only want to listen for this event once, not every time a session is created
-            setSessionId(sessionId);
+            setInputSessionId(sessionId);
             setMode("created");
             setLoading(false);
             socket.disconnect();
@@ -176,7 +176,7 @@ function CollabModal({ onClose }) {
                                 </p>
                                 <div className="flex items-center justify-between bg-white/4 border border-white/8 rounded-xl px-4 py-3.5">
                                     <span className="text-white font-mono text-base tracking-[0.2em] font-medium">
-                                        {sessionId}
+                                        {inputSessionId}
                                     </span>
                                     <button
                                         onClick={handleCopy}
@@ -191,7 +191,7 @@ function CollabModal({ onClose }) {
                             </div>
 
                             <button
-                                onClick={onClose}
+                                onClick={handleJoin}
                                 className="flex items-center justify-center gap-2 w-full bg-white text-black font-semibold text-sm py-3 rounded-xl hover:bg-white/90 transition-all"
                             >
                                 <Wifi size={14} />

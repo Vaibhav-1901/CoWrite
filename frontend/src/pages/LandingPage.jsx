@@ -85,7 +85,7 @@ function LandingPage() {
 
                 <div className="relative z-10 mt-16 w-full max-w-5xl">
                     <div className="relative rounded-xl overflow-hidden border border-white/8 shadow-[0_0_80px_rgba(0,0,0,0.8)]">
-        
+
                         <img
                             src={AppPreview}
                             alt="notes app"
@@ -104,7 +104,7 @@ function LandingPage() {
 
                     <div className="border border-white/6 rounded-2xl bg-[#0c0c0d] overflow-hidden">
                         {/* Steps */}
-                        <div className="divide-y divide-white/5">
+                        <div className="divide-y flex flex-col gap-10 divide-white/5">
                             {[
                                 {
                                     step: "01",
@@ -128,7 +128,7 @@ function LandingPage() {
                                     output: "> 3 joined. edits syncing."
                                 }
                             ].map((item) => (
-                                <div key={item.step} className="grid grid-cols-[80px_1fr_1fr] gap-8 px-8 py-7 group hover:bg-white/[0.02] transition-colors duration-200">
+                                <div key={item.step} className="grid grid-cols-1  md:grid-cols-[80px_1fr_1fr]  gap-8 px-8 py-7 group hover:bg-white/[0.02] transition-colors duration-200">
                                     {/* Step number */}
                                     <span className="text-[42px] font-bold text-white/5 leading-none select-none group-hover:text-white/8 transition-colors">
                                         {item.step}
@@ -169,7 +169,7 @@ function LandingPage() {
                                             <span className="animate-ping absolute inset-0 rounded-full bg-emerald-400 opacity-60" />
                                             <span className="relative rounded-full h-1.5 w-1.5 bg-emerald-400" />
                                         </span>
-                                        <span className="text-[18px] text-white/25 font-mono">3 editing now</span>
+                                        <span className="text-[14px] md:text-[18px]  text-white/25 font-mono">3 editing now</span>
                                     </div>
                                 )
                             },
@@ -195,7 +195,7 @@ function LandingPage() {
                                 indicator: (
                                     <div className="flex items-center gap-1.5  mt-4">
                                         {["work", "ideas", "personal"].map((t, i) => (
-                                            <span key={i} className={`text-[15px] px-2 py-0.5 rounded-full border ${i === 0 ? "border-sky-500/30 text-sky-400/60" :
+                                            <span key={i} className={`md:text-[15px] text-[11px]  px-2 py-0.5 rounded-full border ${i === 0 ? "border-sky-500/30 text-sky-400/60" :
                                                 i === 1 ? "border-emerald-500/30 text-emerald-400/60" :
                                                     "border-purple-500/30 text-purple-400/60"
                                                 }`}>{t}</span>
@@ -239,13 +239,13 @@ function LandingPage() {
 
             {/* ── Auth Modal ── */}
             {showAuth && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div
-                        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                        className="absolute inset-0  bg-black/70 backdrop-blur-sm"
                         onClick={() => setShowAuth(false)}
                     />
-                    <div className="relative z-10">
-                        <Auth onSuccess={() => navigate("/home")} standalone={true} />
+                    <div className="relative z-10 w-full max-w-sm">
+                        <Auth standalone={false} />
                     </div>
                 </div>
             )}

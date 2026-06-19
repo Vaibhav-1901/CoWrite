@@ -71,7 +71,7 @@ function StarField() {
     return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 }
 
-function Auth({ onSuccess=() => {}, standalone = true }) {
+function Auth({ standalone = true }) {
     const [mode, setMode] = useState("login");
     const [form, setForm] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState("");
@@ -105,7 +105,6 @@ function Auth({ onSuccess=() => {}, standalone = true }) {
             setUser(data.user);
             show("Successfully signed in", "sessionJoin");
             navigate("/home");
-            // onSuccess();
 
         } catch (err) {
             setError(err.message);

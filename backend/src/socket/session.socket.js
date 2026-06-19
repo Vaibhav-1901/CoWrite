@@ -24,12 +24,6 @@ const initializeSocket = (server) => {
                     members: [userId],
                     createdBy: userId
                 })
-                socket.join(sessionId);//joining a room with sessionId by the one who created the session
-                socket.data = {
-                    sessionId: newsession.sessionId,
-                    userId,
-                    username
-                }
                 socket.emit("sessionCreated", { sessionId });
                 console.log("session created with id: ", sessionId);
             } catch (error) {
