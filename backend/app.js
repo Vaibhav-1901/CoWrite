@@ -17,7 +17,7 @@ app.use(cors({
 app.use(cookieParser());
 //note routes
 app.use("/api/notes", noteRouter);
-app.use("/api/users", userRouter);it 
+app.use("/api/users", userRouter);
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 })
