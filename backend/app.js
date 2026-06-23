@@ -12,7 +12,8 @@ initializeSocket(server);
 app.use(express.json());
 app.use(cors({
   origin: ["http://localhost:5173",
-    "https://note-vault-eight-neon.vercel.app"]
+    "https://note-vault-eight-neon.vercel.app"],
+    credentials: true
 }));
 app.use(cookieParser());
 //note routes
