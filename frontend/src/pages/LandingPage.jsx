@@ -13,11 +13,11 @@ function LandingPage() {
 
             {/* ── Navbar ── */}
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 h-14 border-b border-white/4 bg-[#080809]/80 backdrop-blur-md">
-                <span className="text-white text-sm font-bold tracking-tight">notes</span>
+                <span className="text-white/25 text-lg font-bold tracking-tight"> <span className="text-white">Co</span> Write</span>
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setShowAuth(true)}
-                        className="bg-white text-black text-xs font-semibold px-4 py-1.5 rounded-lg hover:bg-white/90 transition-colors"
+                        className="bg-white text-black text-[13px] font-semibold px-4 py-1.5 rounded-lg hover:bg-white/90 transition-colors"
                     >
                         get started
                     </button>
